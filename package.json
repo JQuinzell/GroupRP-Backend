@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./src/server.ts",
+    "seed": "ts-node -r tsconfig-paths/register ./src/seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,6 +14,7 @@
     "@types/dotenv": "^4.0.3",
     "@types/mongoose": "^5.0.15",
     "@types/node": "^10.3.1",
+    "casual": "^1.5.19",
     "dotenv": "^6.0.0",
     "mongoose": "^5.1.4",
     "ts-node": "^6.1.0",
