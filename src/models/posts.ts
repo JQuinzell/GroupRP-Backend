@@ -1,4 +1,10 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Document } from 'mongoose'
+import {RoomModel} from './rooms'
+
+export interface PostModel extends Document {
+    body: string
+    room: RoomModel
+}
 
 const PostSchema = new Schema({
     body: String,
@@ -8,4 +14,4 @@ const PostSchema = new Schema({
     }
 })
 
-export default model('Post', PostSchema)
+export default model<PostModel>('Post', PostSchema)

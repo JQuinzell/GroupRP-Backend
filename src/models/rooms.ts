@@ -1,11 +1,13 @@
-import {Schema, model} from 'mongoose'
+import {Schema, model, Document} from 'mongoose'
+import {PostModel} from './posts'
+
+export interface RoomModel extends Document {
+    name: string
+    posts: PostModel[]
+}
 
 const RoomSchema = new Schema({
-    name: String,
-    posts: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Post'
-    }]
+    name: String
 })
 
-export default model('Room', RoomSchema)
+export default model<RoomModel>('Room', RoomSchema)
