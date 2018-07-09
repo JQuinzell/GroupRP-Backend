@@ -4,7 +4,7 @@
         "module": "commonjs",
         "sourceMap": true,
         "baseUrl": "./src",
-        "noImplicitAny": true
+        "noImplicitAny": false
     },
     "include": [
         "src/**/*"

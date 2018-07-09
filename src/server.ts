@@ -1,15 +1,23 @@
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
+import * as cors from 'cors'
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
 import initializeDatabase from 'database'
 import Room from 'models/rooms'
 import Post from 'models/posts'
+import Group from 'models/Group'
 
 const db = initializeDatabase()
 
 const typeDefs = `
 type Query {
+    groups: [Group]
+}
+
+type Group {
+    _id: String
+    name: String
     rooms: [Room]
 }
 
@@ -20,7 +28,7 @@ type Room {
 }
 
 type Post {
-    _id: String
+    _id: String 
     body: String
     room: Room
 }
@@ -28,11 +36,15 @@ type Post {
 
 const resolvers = {
     Query: {
-        rooms: () => Room.find({})
+        groups: () => Group.find({}),
     },
 
     Room: {
-        posts: (room: any) => Post.find({ room: room._id})
+        posts: (room) => Post.find({ room: room._id})
+    },
+
+    Group: {
+        rooms: (group) => Room.find({ group: group._id })
     }
 }
 
@@ -43,9 +55,11 @@ const schema = makeExecutableSchema({
 
 const app = express()
 
+app.use(cors())
+
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
 app.listen(3000, () => console.log('listening'))
 

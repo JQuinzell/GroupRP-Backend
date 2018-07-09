@@ -1,27 +1,31 @@
 import initializeDatabase from 'database'
-import * as casual from 'casual'
+import * as faker from 'faker'
 import Room from 'models/rooms'
 import Post from 'models/posts'
+import Group from 'models/group'
 
 const db = initializeDatabase()
 
-db.once('open', async () => {
-    await Room.remove({})
-    await Post.remove({})
-
+db.dropDatabase(async () => {
     for(let i = 0; i < 3; i++) {
-        const room = await Room.create({ name: casual.word })
-        const promises = []
-        for(let j = 0; j < 10; j++) {
-            const post = Post.create({
-                body: casual.sentences(3),
-                room: room._id
+        const group = await Group.create({
+            name: faker.random.words(2)
+        })
+
+        for(let j = 0; j < 5; j++) {
+            const room = await Room.create({
+                name: faker.random.words(3),
+                group: group._id
             })
-            promises.push(post)
+
+            for(let k = 0; k < 10; k++) {
+                const post = await Post.create({
+                    body: faker.lorem.words(10),
+                    room: room._id
+                })
+            }
         }
-        await Promise.all(promises)
-        console.log('Finished', room.name)
+
     }
-    console.log('done')
     db.close()
 })

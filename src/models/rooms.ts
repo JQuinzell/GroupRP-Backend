@@ -3,11 +3,11 @@ import {PostModel} from './posts'
 
 export interface RoomModel extends Document {
     name: string
-    posts: PostModel[]
 }
 
 const RoomSchema = new Schema({
-    name: String
+    name: String,
+    group: { type: Schema.Types.ObjectId, ref: 'Group'}
 })
 
 export default model<RoomModel>('Room', RoomSchema)
