@@ -13,11 +13,14 @@ const db = initializeDatabase()
 const typeDefs = `
 type Query {
     groups: [Group]
+    group(id: String): Group
+    posts(room: String): [Post]
 }
 
 type Group {
     _id: String
     name: String
+    description: String
     rooms: [Room]
 }
 
@@ -37,6 +40,8 @@ type Post {
 const resolvers = {
     Query: {
         groups: () => Group.find({}),
+        group: (_, args) => Group.findOne({ _id: args.id }),
+        posts: (_, args) => Post.find({ room: args.room })
     },
 
     Room: {

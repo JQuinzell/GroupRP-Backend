@@ -6,26 +6,31 @@ import Group from 'models/group'
 
 const db = initializeDatabase()
 
-db.dropDatabase(async () => {
-    for(let i = 0; i < 3; i++) {
-        const group = await Group.create({
-            name: faker.random.words(2)
-        })
 
-        for(let j = 0; j < 5; j++) {
-            const room = await Room.create({
-                name: faker.random.words(3),
-                group: group._id
-            })
+Group.findOne({ _id: "5b4fc986339b513b5466dfd9"})
+    .then(group => console.log(group))
 
-            for(let k = 0; k < 10; k++) {
-                const post = await Post.create({
-                    body: faker.lorem.words(10),
-                    room: room._id
-                })
-            }
-        }
+// db.dropDatabase(async () => {
+//     for(let i = 0; i < 3; i++) {
+//         const group = await Group.create({
+//             name: faker.random.words(2),
+//             description: faker.lorem.sentences(3)
+//         })
 
-    }
-    db.close()
-})
+//         for(let j = 0; j < 5; j++) {
+//             const room = await Room.create({
+//                 name: faker.random.words(3),
+//                 group: group._id
+//             })
+
+//             for(let k = 0; k < 10; k++) {
+//                 const post = await Post.create({
+//                     body: faker.lorem.words(10),
+//                     room: room._id
+//                 })
+//             }
+//         }
+
+//     }
+//     db.close()
+// })
