@@ -17,6 +17,10 @@ type Query {
     posts(room: String): [Post]
 }
 
+type Mutation {
+    post(input: PostInput): Post
+}
+
 type Group {
     _id: String
     name: String
@@ -35,6 +39,11 @@ type Post {
     body: String
     room: Room
 }
+
+input PostInput {
+    body: String
+    room: String
+}
 `
 
 const resolvers = {
@@ -42,6 +51,12 @@ const resolvers = {
         groups: () => Group.find({}),
         group: (_, args) => Group.findOne({ _id: args.id }),
         posts: (_, args) => Post.find({ room: args.room })
+    },
+
+    Mutation: {
+        post: (_, {input}) => {
+            return Post.create(input)
+        }
     },
 
     Room: {
