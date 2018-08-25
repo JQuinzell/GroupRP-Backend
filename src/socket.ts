@@ -25,6 +25,8 @@ wss.on('connection', ws => {
     ws.on('message', message => {
         console.log('message received')
         const data = JSON.parse(message as string) as Message
+        console.log(data)
+
         const action = data.action
         if(action === 'JOIN_ROOM') {
             const room = rooms.get(data.roomID)
@@ -32,6 +34,7 @@ wss.on('connection', ws => {
                 rooms.set(data.roomID, [socketID])
             } else {
                 if(!room.find(id => id === socketID)) {
+                    console.log(socketID, 'joined room', data.roomID)
                     room.push(socketID)
                 }
             }
@@ -46,13 +49,14 @@ wss.on('connection', ws => {
         }
         if(action === 'SEND_MESSAGE') {
             const room = rooms.get(data.roomID)
+            console.log(socketID, 'sending message to room', data.roomID)
             if(room) {
                 room.forEach(id => {
                     const target = sockets.get(id)
                     target.send(JSON.stringify({
                         action: 'MESSAGE',
                         roomID: data.roomID,
-                        message: data.message
+                        body: data.message
                     }))
                 })
             }
