@@ -62,6 +62,13 @@ wss.on('connection', ws => {
             }
         }
     })
+
+    ws.on('close', () => {
+        for(let room of rooms.values()) {
+            const i = room.findIndex(id => id === socketID)
+            room.splice(i, 1)
+        }
+    })
 })
 
 wss.on('error', console.log)
