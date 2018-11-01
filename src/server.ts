@@ -2,7 +2,7 @@ import { ApolloServer, gql} from 'apollo-server'
 import initializeDatabase from 'database'
 import Room from 'models/rooms'
 import Post from 'models/posts'
-import Group from 'models/Group'
+import Group from 'models/group'
 import typeDefs from './schemas'
 
 const db = initializeDatabase()
