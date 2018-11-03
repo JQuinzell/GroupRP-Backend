@@ -1,7 +1,11 @@
 import * as WebSocket from 'ws'
 import * as uuid from 'uuid/v1'
+import initializeDatabase from 'database'
+import Post from 'models/posts'
+
 console.log('starting')
 const wss = new WebSocket.Server({ port: 5000 })
+initializeDatabase()
 
 //map socket id to its socket
 const sockets = new Map<string, WebSocket>()
@@ -52,13 +56,15 @@ wss.on('connection', ws => {
             if (room) {
                 room.forEach(id => {
                     const target = sockets.get(id)
-                    target.send(
-                        JSON.stringify({
-                            action: 'MESSAGE',
-                            roomID: data.roomID,
-                            body: data.message
-                        })
-                    )
+                    Post.create({ body: data.message, room: data.roomID }).then(post => {
+                        target.send(
+                            JSON.stringify({
+                                action: 'MESSAGE',
+                                roomID: data.roomID,
+                                post: post
+                            })
+                        )
+                    })
                 })
             }
         }
