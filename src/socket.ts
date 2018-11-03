@@ -2,6 +2,7 @@ import * as WebSocket from 'ws'
 import * as uuid from 'uuid/v1'
 import initializeDatabase from 'database'
 import Post from 'models/posts'
+import Room from 'models/rooms'
 
 console.log('starting')
 const wss = new WebSocket.Server({ port: 5000 })
@@ -32,15 +33,19 @@ wss.on('connection', ws => {
 
         const action = data.action
         if (action === 'JOIN_ROOM') {
-            const room = rooms.get(data.roomID)
-            if (!room) {
-                rooms.set(data.roomID, [socketID])
-            } else {
-                if (!room.find(id => id === socketID)) {
-                    console.log(socketID, 'joined room', data.roomID)
-                    room.push(socketID)
-                }
-            }
+            Room.findById(data.roomID)
+                .then(_ => {
+                    const room = rooms.get(data.roomID)
+                    if (!room) {
+                        rooms.set(data.roomID, [socketID])
+                    } else {
+                        if (!room.find(id => id === socketID)) {
+                            console.log(socketID, 'joined room', data.roomID)
+                            room.push(socketID)
+                        }
+                    }
+                })
+                .catch(err => console.log('Room not found'))
         }
         if (action === 'LEAVE_ROOM') {
             const room = rooms.get(data.roomID)
